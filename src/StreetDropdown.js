@@ -19,7 +19,7 @@ class StreetDropdown extends Component {
         value: 1
       }],
       selected: '',
-      points: [],
+      points: [{ lat: 42, lng: -71 }, { lat: 42, lng: -72 }],
       fetching: true
     };
     this.query = '';
@@ -30,6 +30,7 @@ class StreetDropdown extends Component {
 
   componentDidMount() {
     this.InitialStreets();
+    console.log(this.props.children);
   }
 
   InitialStreets() {
@@ -62,6 +63,7 @@ class StreetDropdown extends Component {
   OnDropdownChange(event, data) {
     this.setState({ selected: data.value, fetching: true });
     this.IntersectingStreets(data.value);
+    console.log(this.props.children);
   }
 
   render() {

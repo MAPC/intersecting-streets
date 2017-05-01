@@ -13,12 +13,12 @@ const MyMarkersList = ({ markers }) => {
 
 class PointsMap extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       lat: 42,
       lng: -71,
       zoom: 13,
-      points: [{ lat: 42, lng: -71 }]
+      points: props.points
     };
   }
 
@@ -31,7 +31,8 @@ class PointsMap extends React.Component {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
         />
-        {points.map((point, index) => 
+        {
+          this.state.points.map((point, index) => 
           <Marker position={[point.lat, point.lng]} key={index}>
           </Marker>
         )}
