@@ -118,7 +118,7 @@ class StreetDropdown extends Component {
           <div className="column">
             <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection['text'] } selection options={ intersectingStreets } onChange={onSecondChange} />
           </div>
-          <input type="hidden" name="lat" value={`${selectedIntersection['lat']} selectedIntersection['long']`} />
+          <input type="hidden" name="point" value={`${selectedIntersection['lat']} selectedIntersection['long']`} />
         </div>
       </div>
     )

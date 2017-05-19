@@ -1,3 +1,12 @@
+# Intersecting Streets (MA)
+This is a simple React component that helps uses select their nearest intersection in Massachusetts.
+
+## Why...
+When running an online survey, respondents may not want to volunteer the exact location of their home. This application provides a way for users to select a municipality and a nearby intersection through dropdowns or an interactive maps. The underlying data is stored remotely. 
+
+## How is the data available when embedded in my application?
+When the user selects a final intersection, the lat and lon are stored as a string in a hidden input field. 
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
