@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import $ from 'jquery'; 
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import { Map, Marker, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
@@ -38,7 +38,6 @@ class StreetDropdown extends Component {
       selectedIntersectionIndex: 0,
       points: [{ lat: 42, lng: -71 }, { lat: 42, lng: -72 }],
       bounds: [[42, -71], [42, -72]],
-      fetching: true,
       lat: 42,
       lng: -71,
       zoom: 17
@@ -59,37 +58,34 @@ class StreetDropdown extends Component {
 
   IntersectingStreets(street) {
     let encodedStreet = street;
-    this.setState({ fetching: true });
     return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, st_name_2 AS value FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=1`)
       .then((data) => {
-        this.setState({ intersectingStreets: data.rows, fetching: false });
+        this.setState({ intersectingStreets: data.rows });
         this.IntersectingPoints(street);
       });
   }
 
   IntersectingPoints = (street) => {
     let encodedStreet = street;
-    this.setState({ fetching: true });
     return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, lat, long AS lng FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=1`)
       .then((data) => {
         let latlngs = data.rows.map((row) => { return [row.lat,row.lng]; });
         let center = new L.LatLngBounds(latlngs).getCenter();
 
-        if (latlngs.length == 1) {
+        if (latlngs.length === 1) {
           this.setState({selected: data.rows[0].text });
         } else {
           this.setState({selected: ''});
         }
 
         this.setState({ points: data.rows, 
-                        fetching: false, 
                         lat: center.lat, 
                         lng: center.lng });
       });
   }
 
   OnDropdownChange = (event, data) => {
-    this.setState({ fetching: true });
+    this.setState({selectedIntersectionIndex: 0})
     this.IntersectingStreets(data.value);
   }
 
@@ -104,17 +100,13 @@ class StreetDropdown extends Component {
   render() {
     let   initialStreets = this.state.initialStreets,
           intersectingStreets = this.state.intersectingStreets,
-          selectedIntersection = intersectingStreets[this.state.selectedIntersectionIndex]['value'],
-          intersectingPoints = this.state.points.map((point,index) =>
-            <li key={index}>
-              {point.lat}, {point.lng}
-            </li>
-          ),
+          selectedIntersection = intersectingStreets[this.state.selectedIntersectionIndex],
+
           onFirstChange = this.OnDropdownChange,
           onSecondChange = this.OnIntersectingPointsChange,
-          onMarkerClick = this.OnMarkerClick,
-          fetching = this.state.fetching,
-          position = [this.state.lat, this.state.lng];
+          onMarkerClick = this.OnMarkerClick;
+
+    console.log(this.state.selectedIntersectionIndex, " -> ", intersectingStreets);
 
     return (
       <div className="ui equal width grid">
@@ -126,7 +118,7 @@ class StreetDropdown extends Component {
             <Dropdown placeholder='Search for Street' fluid search selection options={ initialStreets } onChange={onFirstChange} />
           </div>
           <div className="column">
-            { fetching ? 'Fetching' : <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection} selection options={ intersectingStreets } onChange={onSecondChange} /> }
+            <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection['value'] } selection options={ intersectingStreets } onChange={onSecondChange} />
           </div>
         </div>
         <input type="hidden" name="lat" value={this.state.selected} />
