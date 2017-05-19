@@ -15,7 +15,7 @@ const PointsMap = ({ position, zoom, points, center, onMarkerClick }) => {
         />
         {
           points.map((point, index) => 
-          <Marker onClick={onMarkerClick} position={[point.lat, point.lng]} key={index}>
+          <Marker onClick={onMarkerClick.bind(this, index)} position={[point.lat, point.lng]} key={index}>
           </Marker>
         )}
       </Map>)
@@ -35,6 +35,7 @@ class StreetDropdown extends Component {
         value: 1
       }],
       selected: '',
+      selectedIntersectionIndex: 0,
       points: [{ lat: 42, lng: -71 }, { lat: 42, lng: -72 }],
       bounds: [[42, -71], [42, -72]],
       fetching: true,
@@ -96,13 +97,14 @@ class StreetDropdown extends Component {
     this.setState({ selected: data.value });
   }
 
-  OnMarkerClick = (marker) => {
-    console.log(marker);
+  OnMarkerClick = (index, marker) => {
+    this.setState({ selectedIntersectionIndex: index });
   }
 
   render() {
-    const initialStreets = this.state.initialStreets,
+    let   initialStreets = this.state.initialStreets,
           intersectingStreets = this.state.intersectingStreets,
+          selectedIntersection = intersectingStreets[this.state.selectedIntersectionIndex]['value'],
           intersectingPoints = this.state.points.map((point,index) =>
             <li key={index}>
               {point.lat}, {point.lng}
@@ -114,8 +116,6 @@ class StreetDropdown extends Component {
           fetching = this.state.fetching,
           position = [this.state.lat, this.state.lng];
 
-    console.log(this.state.points);
-
     return (
       <div className="ui equal width grid">
         <div className="row">
@@ -126,7 +126,7 @@ class StreetDropdown extends Component {
             <Dropdown placeholder='Search for Street' fluid search selection options={ initialStreets } onChange={onFirstChange} />
           </div>
           <div className="column">
-            { fetching ? 'Fetching' : <Dropdown placeholder='Search for Intersecting Street' fluid search selection options={ intersectingStreets } onChange={onSecondChange} /> }
+            { fetching ? 'Fetching' : <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection} selection options={ intersectingStreets } onChange={onSecondChange} /> }
           </div>
         </div>
         <input type="hidden" name="lat" value={this.state.selected} />
