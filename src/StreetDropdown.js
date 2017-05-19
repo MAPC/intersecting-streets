@@ -100,7 +100,7 @@ class StreetDropdown extends Component {
   render() {
     let initialStreets = this.state.initialStreets,
         intersectingStreets = this.state.intersectingStreets,
-        selectedIntersection = this.state.points[this.state.selectedIntersectionIndex]['text'],
+        selectedIntersection = this.state.points[this.state.selectedIntersectionIndex],
 
         onFirstChange = this.OnDropdownChange,
         onSecondChange = this.OnIntersectingPointsChange,
@@ -116,10 +116,10 @@ class StreetDropdown extends Component {
             <Dropdown placeholder='Search for Street' fluid search selection options={ initialStreets } onChange={onFirstChange} />
           </div>
           <div className="column">
-            <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection } selection options={ intersectingStreets } onChange={onSecondChange} />
+            <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection['text'] } selection options={ intersectingStreets } onChange={onSecondChange} />
           </div>
+          <input type="hidden" name="lat" value={`${selectedIntersection['lat']} selectedIntersection['long']`} />
         </div>
-        <input type="hidden" name="lat" value={this.state.selected} />
       </div>
     )
   }
