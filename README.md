@@ -1,11 +1,16 @@
 # Intersecting Streets (MA)
-This is a simple React component that helps uses select their nearest intersection in Massachusetts.
+This is a simple React component that helps users select their nearest street intersection in Massachusetts.
 
 ## Why...
-When running an online survey, respondents may not want to volunteer the exact location of their home. This application provides a way for users to select a municipality and a nearby intersection through dropdowns or an interactive maps. The underlying data is stored remotely. 
+When taking an online survey, respondents may not want to volunteer the exact location of their home. This application provides a way for users to select a municipality and a nearby intersection through dropdowns or an interactive map. The underlying data is stored remotely in Carto. 
 
 ## How is the data available when embedded in my application?
-When the user selects a final intersection, the lat and lon are stored as a string in a hidden input field. 
+When the user selects a final intersection, the lat and lon are stored as a string in a hidden input field. Embedding the markup within a form will make that data available on a subsequent form post request.
+
+## That's sloppy.
+Working on it... this was originally meant as a JS component for a Rails app. I didn't have a way to create something lean for dropping into a Rails application without creating a fully-fledged Ember application. This was the closest I came. Ideally, I'd make something like a [web component](https://developer.mozilla.org/en-US/docs/Web/Web_Components).
+
+## Boilerplate Readme: 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
