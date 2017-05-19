@@ -6,7 +6,7 @@ import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
 
-const PointsMap = ({ position, zoom, points, center }) => {
+const PointsMap = ({ position, zoom, points, center, onMarkerClick }) => {
   return (
       <Map center={center} zoom={zoom}>
         <TileLayer
@@ -15,7 +15,7 @@ const PointsMap = ({ position, zoom, points, center }) => {
         />
         {
           points.map((point, index) => 
-          <Marker position={[point.lat, point.lng]} key={index}>
+          <Marker onClick={onMarkerClick} position={[point.lat, point.lng]} key={index}>
           </Marker>
         )}
       </Map>)
@@ -43,9 +43,6 @@ class StreetDropdown extends Component {
       zoom: 17
     };
     this.query = '';
-
-    this.OnDropdownChange = this.OnDropdownChange.bind(this);
-    this.IntersectingPoints = this.IntersectingPoints.bind(this);
   }
 
   componentDidMount() {
@@ -69,7 +66,7 @@ class StreetDropdown extends Component {
       });
   }
 
-  IntersectingPoints(street) {
+  IntersectingPoints = (street) => {
     let encodedStreet = street;
     this.setState({ fetching: true });
     return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, lat, long AS lng FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=1`)
@@ -79,6 +76,8 @@ class StreetDropdown extends Component {
 
         if (latlngs.length == 1) {
           this.setState({selected: data.rows[0].text });
+        } else {
+          this.setState({selected: ''});
         }
 
         this.setState({ points: data.rows, 
@@ -88,40 +87,49 @@ class StreetDropdown extends Component {
       });
   }
 
-  OnDropdownChange(event, data) {
+  OnDropdownChange = (event, data) => {
     this.setState({ fetching: true });
     this.IntersectingStreets(data.value);
   }
 
+  OnIntersectingPointsChange = (event, data) => {
+    this.setState({ selected: data.value });
+  }
+
+  OnMarkerClick = (marker) => {
+    console.log(marker);
+  }
+
   render() {
-    const initialStreets = this.state.initialStreets;
-    const intersectingStreets = this.state.intersectingStreets;
-    const intersectingPoints = this.state.points.map((point,index) =>
-      <li key={index}>
-        {point.lat}, {point.lng}
-      </li>
-    );
-    const onChange = this.OnDropdownChange;
-    const fetching = this.state.fetching;
-    const position = [this.state.lat, this.state.lng];
+    const initialStreets = this.state.initialStreets,
+          intersectingStreets = this.state.intersectingStreets,
+          intersectingPoints = this.state.points.map((point,index) =>
+            <li key={index}>
+              {point.lat}, {point.lng}
+            </li>
+          ),
+          onFirstChange = this.OnDropdownChange,
+          onSecondChange = this.OnIntersectingPointsChange,
+          onMarkerClick = this.OnMarkerClick,
+          fetching = this.state.fetching,
+          position = [this.state.lat, this.state.lng];
+
+    console.log(this.state.points);
+
     return (
       <div className="ui equal width grid">
         <div className="row">
-          <PointsMap zoom={this.state.zoom} points={this.state.points} center={[this.state.lat,this.state.lng]} />
+          <PointsMap zoom={this.state.zoom} points={this.state.points} center={[this.state.lat,this.state.lng]} onMarkerClick={onMarkerClick} />
         </div>
         <div className="row">
           <div className="column">
-            <Dropdown placeholder='Search for Street' fluid search selection options={ initialStreets } onChange={onChange} />
+            <Dropdown placeholder='Search for Street' fluid search selection options={ initialStreets } onChange={onFirstChange} />
           </div>
           <div className="column">
-            { fetching ? null : <Dropdown placeholder='Search for Intersecting Street' fluid search selection options={ intersectingStreets } /> }
+            { fetching ? 'Fetching' : <Dropdown placeholder='Search for Intersecting Street' fluid search selection options={ intersectingStreets } onChange={onSecondChange} /> }
           </div>
         </div>
-        <div className="row">
-          <div className="column">
-            { this.state.selected }
-          </div>
-        </div>
+        <input type="hidden" name="lat" value={this.state.selected} />
       </div>
     )
   }
