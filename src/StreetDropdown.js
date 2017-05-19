@@ -98,15 +98,13 @@ class StreetDropdown extends Component {
   }
 
   render() {
-    let   initialStreets = this.state.initialStreets,
-          intersectingStreets = this.state.intersectingStreets,
-          selectedIntersection = intersectingStreets[this.state.selectedIntersectionIndex],
+    let initialStreets = this.state.initialStreets,
+        intersectingStreets = this.state.intersectingStreets,
+        selectedIntersection = this.state.points[this.state.selectedIntersectionIndex]['text'],
 
-          onFirstChange = this.OnDropdownChange,
-          onSecondChange = this.OnIntersectingPointsChange,
-          onMarkerClick = this.OnMarkerClick;
-
-    console.log(this.state.selectedIntersectionIndex, " -> ", intersectingStreets);
+        onFirstChange = this.OnDropdownChange,
+        onSecondChange = this.OnIntersectingPointsChange,
+        onMarkerClick = this.OnMarkerClick;
 
     return (
       <div className="ui equal width grid">
@@ -118,7 +116,7 @@ class StreetDropdown extends Component {
             <Dropdown placeholder='Search for Street' fluid search selection options={ initialStreets } onChange={onFirstChange} />
           </div>
           <div className="column">
-            <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection['value'] } selection options={ intersectingStreets } onChange={onSecondChange} />
+            <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection } selection options={ intersectingStreets } onChange={onSecondChange} />
           </div>
         </div>
         <input type="hidden" name="lat" value={this.state.selected} />
