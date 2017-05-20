@@ -5,6 +5,7 @@ import { Map, Marker, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
+const muni_id = window.muni_id || 1;
 
 const PointsMap = ({ position, zoom, points, center, onMarkerClick }) => {
   return (
@@ -50,7 +51,7 @@ class StreetDropdown extends Component {
   }
 
   InitialStreets() {
-    return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_1) AS text%20, st_name_1 AS value FROM%20%22mapc-admin%22.survey_intersection%20WHERE town_id=1`)
+    return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_1) AS text%20, st_name_1 AS value FROM%20%22mapc-admin%22.survey_intersection%20WHERE town_id=${muni_id}`)
       .then((data) => {
         this.setState({ initialStreets: data.rows });
       });
@@ -58,7 +59,7 @@ class StreetDropdown extends Component {
 
   IntersectingStreets(street) {
     let encodedStreet = street;
-    return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, st_name_2 AS value FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=1`)
+    return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, st_name_2 AS value FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=${muni_id}`)
       .then((data) => {
         this.setState({ intersectingStreets: data.rows });
         this.IntersectingPoints(street);
@@ -67,7 +68,7 @@ class StreetDropdown extends Component {
 
   IntersectingPoints = (street) => {
     let encodedStreet = street;
-    return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, lat, long AS lng FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=1`)
+    return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, lat, long AS lng FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=${muni_id}`)
       .then((data) => {
         let latlngs = data.rows.map((row) => { return [row.lat,row.lng]; });
         let center = new L.LatLngBounds(latlngs).getCenter();
