@@ -63,29 +63,34 @@ class ChildSurvey extends Component {
   render() {
     return (
       <div className="child-survey">
-        <Dropdown placeholder='What grade is your child in?' fluid selection 
-                  options={ grades }
-                  name={ 'grade_'+this.state.id }/>
+        <div className="ui attached segment">
+          <div className="ui top attached label">
+            Child { this.state.id }
+          </div>
+          <Dropdown placeholder='What grade is your child in?' fluid selection 
+                    options={ grades }
+                    name={ 'grade_'+this.state.id }/>
 
-        <Dropdown placeholder='How does your child get TO school on most days?' fluid selection 
-                  onChange={this.updateTo} 
-                  options={ modes }
-                  name={ 'to_school_'+this.state.id }/>
+          <Dropdown placeholder='How does your child get TO school on most days?' fluid selection 
+                    onChange={this.updateTo} 
+                    options={ modes }
+                    name={ 'to_school_'+this.state.id }/>
 
-        <TripReasonQuestion id={this.state.id} 
-                            mode={this.state.to} 
-                            name={ `dropoff_${this.state.id}` }
-                            question='Do you usually drop off your child on your way to work or another destination?' />
+          <TripReasonQuestion id={this.state.id} 
+                              mode={this.state.to} 
+                              name={ `dropoff_${this.state.id}` }
+                              question='Do you usually drop off your child on your way to work or another destination?' />
 
-        <Dropdown placeholder='How does your child get FROM school on most days?' fluid selection 
-                  onChange={this.updateFrom} 
-                  options={ modes }
-                  name={ 'from_school_'+this.state.id }/>
+          <Dropdown placeholder='How does your child get FROM school on most days?' fluid selection 
+                    onChange={this.updateFrom} 
+                    options={ modes }
+                    name={ 'from_school_'+this.state.id }/>
 
-        <TripReasonQuestion id={this.state.id} 
-                            mode={this.state.from} 
-                            name={ `pickup_${this.state.id}` }
-                            question='Do you usually pick up your child on your way to work or another destination?' />
+          <TripReasonQuestion id={this.state.id} 
+                              mode={this.state.from} 
+                              name={ `pickup_${this.state.id}` }
+                              question='Do you usually pick up your child on your way to work or another destination?' />
+        </div>
       </div>
     )
   }
