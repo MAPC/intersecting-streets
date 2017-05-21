@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PointsMap from './PointsMap';
 import { Dropdown } from 'semantic-ui-react';
 import $ from 'jquery'; 
 import { Map, Marker, TileLayer } from 'react-leaflet';
@@ -6,21 +7,6 @@ import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
 const muni_id = window.muni_id || 1;
-
-const PointsMap = ({ position, zoom, points, center, onMarkerClick }) => {
-  return (
-      <Map center={center} zoom={zoom}>
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-        />
-        {
-          points.map((point, index) => 
-          <Marker onClick={onMarkerClick.bind(this, index)} position={[point.lat, point.lng]} key={index}>
-          </Marker>
-        )}
-      </Map>)
-} 
 
 class StreetDropdown extends Component {
   constructor(props) {
@@ -35,10 +21,10 @@ class StreetDropdown extends Component {
         name: '',
         value: 1
       }],
-      selected: '',
+      customPoint: null,
+      selectedIntersection: null,
       selectedIntersectionIndex: 0,
       points: [{ lat: 42, lng: -71 }, { lat: 42, lng: -72 }],
-      bounds: [[42, -71], [42, -72]],
       lat: 42,
       lng: -71,
       zoom: 17
@@ -73,12 +59,6 @@ class StreetDropdown extends Component {
         let latlngs = data.rows.map((row) => { return [row.lat,row.lng]; });
         let center = new L.LatLngBounds(latlngs).getCenter();
 
-        if (latlngs.length === 1) {
-          this.setState({selected: data.rows[0].text });
-        } else {
-          this.setState({selected: ''});
-        }
-
         this.setState({ points: data.rows, 
                         lat: center.lat, 
                         lng: center.lng });
@@ -91,35 +71,50 @@ class StreetDropdown extends Component {
   }
 
   OnIntersectingPointsChange = (event, data) => {
-    this.setState({ selected: data.value });
+    let chosenIndex = data.options.findIndex((el) => { return el.value === data.value });
+    this.setState({ selectedIntersectionIndex: chosenIndex, customPoint: null });
   }
 
   OnMarkerClick = (index, marker) => {
-    this.setState({ selectedIntersectionIndex: index });
+    this.setState({ selectedIntersectionIndex: index, customPoint: null });
+  }
+
+  AddCustomPoint = (loc) => {
+    this.setState({ customPoint: { lat: loc.latlng.lat, lng: loc.latlng.lng } });
   }
 
   render() {
     let initialStreets = this.state.initialStreets,
         intersectingStreets = this.state.intersectingStreets,
         selectedIntersection = this.state.points[this.state.selectedIntersectionIndex],
-
         onFirstChange = this.OnDropdownChange,
         onSecondChange = this.OnIntersectingPointsChange,
-        onMarkerClick = this.OnMarkerClick;
+        onMarkerClick = this.OnMarkerClick,
+        chosenLatLng = this.state.customPoint || selectedIntersection;
 
     return (
       <div className="ui equal width grid">
         <div className="row">
-          <PointsMap zoom={this.state.zoom} points={this.state.points} center={[this.state.lat,this.state.lng]} onMarkerClick={onMarkerClick} />
+          <PointsMap  zoom={this.state.zoom} 
+                      points={this.state.points} 
+                      center={[this.state.lat,this.state.lng]} 
+                      onMarkerClick={onMarkerClick}
+                      customPoint={this.state.customPoint}
+                      addCustomPoint={this.AddCustomPoint} />
         </div>
         <div className="row">
           <div className="column">
-            <Dropdown placeholder='Search for Street' fluid search selection options={ initialStreets } onChange={onFirstChange} />
+            <Dropdown placeholder='Search for Street' fluid search selection 
+                      options={ initialStreets } 
+                      onChange={onFirstChange} />
           </div>
           <div className="column">
-            <Dropdown placeholder='Search for Intersecting Street' fluid search value={selectedIntersection['text'] } selection options={ intersectingStreets } onChange={onSecondChange} />
+            <Dropdown placeholder='Search for Intersecting Street' fluid search 
+                      value={selectedIntersection['text'] } selection 
+                      options={ intersectingStreets } 
+                      onChange={onSecondChange} />
           </div>
-          <input type="hidden" name="point" value={`${selectedIntersection['lat']} selectedIntersection['long']`} />
+          <input type="hidden" name="point" value={`${chosenLatLng['lat']} ${chosenLatLng['lng']}`} />
         </div>
       </div>
     )
