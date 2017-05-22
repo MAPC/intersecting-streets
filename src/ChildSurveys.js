@@ -38,17 +38,18 @@ class ChildSurveys extends Component {
     return (
        <div>
         {childSurveys}
-        <Button onClick={this.AddChild}>
+        <Button onClick={this.AddChild}
+                type='button'>
           Add another child at this school
         </Button>
-        <div className="field">
-          <Dropdown placeholder='How many vehicles do you have in your household?' fluid selection
-                    options={ counts }
-                    name={ 'nr_vehicles' }/>
-        </div>
+
+        <Dropdown placeholder='How many vehicles do you have in your household?' fluid selection
+                  options={ counts }
+                  name={ 'survey_response[nr_vehicles]' }/>
+
         <Dropdown placeholder="How many people in your household have a driver's license?" fluid selection 
                   options={ counts }
-                  name={ 'nr_licenses' }/>
+                  name={ 'survey_response[nr_licenses]' }/>
        </div>
 
     );

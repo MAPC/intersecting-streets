@@ -114,7 +114,7 @@ class StreetDropdown extends Component {
                       options={ intersectingStreets } 
                       onChange={onSecondChange} />
           </div>
-          <input type="hidden" name="geometry" value={`POINT (${chosenLatLng['lat']} ${chosenLatLng['lng']})`} />
+          <input type="hidden" name="survey_response[geometry]" value={`POINT (${chosenLatLng['lat']} ${chosenLatLng['lng']})`} />
         </div>
       </div>
     )
