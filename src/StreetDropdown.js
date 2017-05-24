@@ -7,6 +7,7 @@ import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
 const muni_id = window.muni_id || 1;
+const school = window.school || { lat: 42, lng: -71 };
 
 class StreetDropdown extends Component {
   constructor(props) {
@@ -24,10 +25,11 @@ class StreetDropdown extends Component {
       customPoint: null,
       selectedIntersection: null,
       selectedIntersectionIndex: 0,
-      points: [{ lat: 42, lng: -71 }, { lat: 42, lng: -72 }],
-      lat: 42,
-      lng: -71,
-      zoom: 17
+      points: [{ lat: 42, lng: -71 }],
+      lat: school.lat,
+      lng: school.lng,
+      school,
+      zoom: 16
     };
     this.query = '';
   }
@@ -97,6 +99,7 @@ class StreetDropdown extends Component {
         <div className="row">
           <PointsMap  zoom={this.state.zoom} 
                       points={this.state.points} 
+                      school={this.state.school}
                       center={[this.state.lat,this.state.lng]} 
                       onMarkerClick={onMarkerClick}
                       customPoint={this.state.customPoint}
