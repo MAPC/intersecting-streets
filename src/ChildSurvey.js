@@ -1,15 +1,18 @@
-import { Dropdown } from 'semantic-ui-react';
+import { Form, Dropdown } from 'semantic-ui-react';
 import React, { Component } from 'react';
 
 // answers and values
 // we can internationalize these in rails
-const modes = [ {value: "sb",   text: "School Bus"},
+const modes = [ {value: "w",    text: "Walk"},
+                {value: "fv",   text: "Family Vehicle (only children in your family)"},
+                {value: "sb",   text: "School Bus"},
                 {value: "b",    text: "Bicycle"},
                 {value: "o",    text: "Other (skateboard, scooter, inline skates, etc.)"},
                 {value: "t",    text: "Transit (city bus, subway, etc.)"},
-                {value: "cp",   text: "Carpool (with children from other families)"},
-                {value: "w",    text: "Walk"},
-                {value: "fv",   text: "Family Vehicle (only children in your family)"} ];
+                {value: "cp",   text: "Carpool (with children from other families)"}
+              ].map(option=> {
+                return { value: option.value, text: window.__(option.text) };
+              });
 
 const grades = [  { value: 'pk',   text: 'Pre-K'},
                   { value: 'k',    text: 'K'},
@@ -24,17 +27,24 @@ const grades = [  { value: 'pk',   text: 'Pre-K'},
                   { value: '9',    text: '9'},
                   { value: '10',   text: '10'},
                   { value: '11',   text: '11'},
-                  { value: '12',   text: '12'} ];
+                  { value: '12',   text: '12'} 
+                ];
 
 const yesNo = [ { value: 'y', text: 'Yes' },
-                { value: 'n', text: 'No'  } ];
+                { value: 'n', text: 'No'  } 
+              ].map(option=> {
+                return { value: option.value, text: window.__(option.text) };
+              });
 
 const TripReasonQuestion = ({id, mode, question, name}) => {
   if (mode === 'fv' || mode === 'cp' ) {
     return (
-      <Dropdown placeholder={question} fluid selection 
-                name={name}
-                options={ yesNo } />
+      <div className="field">
+        <Form.Dropdown placeholder={question} fluid selection 
+                  name={name}
+                  label={ window.__(question) }
+                  options={ yesNo } />
+      </div>
     )
   } else {
     return null
@@ -67,29 +77,35 @@ class ChildSurvey extends Component {
           <div className="ui top attached label">
             Child { this.state.id }
           </div>
-          <Dropdown placeholder='What grade is your child in?' fluid selection 
+          <Form.Dropdown placeholder='Select from an option below' fluid selection 
+                    label={ window.__('What grade is your child in?') }
                     options={ grades }
+                    labeled={ true } 
                     name={ `survey_response[grade_${this.state.id}]` } />
 
-          <Dropdown placeholder='How does your child get TO school on most days?' fluid selection 
+          <Form.Dropdown placeholder='Select from an option below' fluid selection 
                     onChange={this.updateTo} 
                     options={ modes }
+                    label={ window.__('How does your child get TO school on most days?') }
                     name={ `survey_response[to_school_${this.state.id}]` } />
 
-          <TripReasonQuestion id={this.state.id} 
-                              mode={this.state.to} 
-                              name={ `survey_response[dropoff_${this.state.id}]` }
-                              question='Do you usually drop off your child on your way to work or another destination?' />
 
-          <Dropdown placeholder='How does your child get FROM school on most days?' fluid selection 
+          <TripReasonQuestion id={this.state.id} 
+                            mode={this.state.to} 
+                            name={ `survey_response[dropoff_${this.state.id}]` }
+                            question='Do you usually drop off your child on your way to work or another destination?' />
+
+          <Form.Dropdown placeholder='Select from an option below' fluid selection 
                     onChange={this.updateFrom} 
                     options={ modes }
+                    label={ window.__('How does your child get home FROM school on most days?') }
                     name={ `survey_response[from_school_${this.state.id}]` } />
 
+
           <TripReasonQuestion id={this.state.id} 
-                              mode={this.state.from} 
-                              name={ `survey_response[pickup_${this.state.id}]` }
-                              question='Do you usually pick up your child on your way to work or another destination?' />
+                            mode={this.state.from} 
+                            name={ `survey_response[pickup_${this.state.id}]` }
+                            question='Do you usually pick up your child on your way from work or another origin?' />
         </div>
       </div>
     )

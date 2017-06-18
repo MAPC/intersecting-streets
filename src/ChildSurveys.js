@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ChildSurvey from './ChildSurvey';
-import { Dropdown, Button } from 'semantic-ui-react';
+import { Form, Dropdown, Button } from 'semantic-ui-react';
 
 const counts = [  { value: '0', text: '0'  },
                   { value: '1', text: '1'  },
@@ -36,21 +36,22 @@ class ChildSurveys extends Component {
       );
     }
     return (
-       <div>
+      <div>
         {childSurveys}
         <Button onClick={this.AddChild}
-                type='button'>
-          Add another child at this school
+                type='button'
+                className="primary">
+          { window.__('Add another child at this school') }
         </Button>
-
-        <Dropdown placeholder='How many vehicles do you have in your household?' fluid selection
+        <Form.Dropdown placeholder='Select from an option below' fluid selection
                   options={ counts }
+                  label={ window.__('How many vehicles do you have in your household?') }
                   name={ 'survey_response[nr_vehicles]' }/>
-
-        <Dropdown placeholder="How many people in your household have a driver's license?" fluid selection 
+        <Form.Dropdown placeholder="Select from an option below" fluid selection 
                   options={ counts }
+                  label={ window.__('How many people in your household have a driver\'s license?') }
                   name={ 'survey_response[nr_licenses]' }/>
-       </div>
+      </div>
 
     );
   }

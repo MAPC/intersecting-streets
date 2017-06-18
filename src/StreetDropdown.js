@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PointsMap from './PointsMap';
-import { Dropdown } from 'semantic-ui-react';
+import { Form, Dropdown } from 'semantic-ui-react';
 import $ from 'jquery'; 
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
@@ -29,7 +29,8 @@ class StreetDropdown extends Component {
       lat: school.lat,
       lng: school.lng,
       school,
-      zoom: 16
+      zoom: 16,
+      showDropdowns: false
     };
     this.query = '';
   }
@@ -85,6 +86,10 @@ class StreetDropdown extends Component {
     this.setState({ customPoint: { lat: loc.latlng.lat, lng: loc.latlng.lng } });
   }
 
+  ShowDropdowns = (event) => {
+    this.setState({ showDropdowns: true });
+  }
+
   render() {
     let initialStreets = this.state.initialStreets,
         intersectingStreets = this.state.intersectingStreets,
@@ -95,7 +100,7 @@ class StreetDropdown extends Component {
         chosenLatLng = this.state.customPoint || selectedIntersection;
 
     return (
-      <div className="ui equal width grid">
+      <div className="ui equal width padded grid">
         <div className="row">
           <PointsMap  zoom={this.state.zoom} 
                       points={this.state.points} 
@@ -105,17 +110,26 @@ class StreetDropdown extends Component {
                       customPoint={this.state.customPoint}
                       addCustomPoint={this.AddCustomPoint} />
         </div>
-        <div className="row">
+        <div className="row" onClick={this.ShowDropdowns} style={{display: this.state.showDropdowns ? 'none' : 'inherit'}}>
+          <div className="ui button">{window.__('...or tell us the street intersection closest to your home.')}</div>
+        </div>
+        <div className="row" style={{display: this.state.showDropdowns ? 'inherit' : 'none'}}>
           <div className="column">
-            <Dropdown placeholder='Search for Street' fluid search selection 
-                      options={ initialStreets } 
-                      onChange={onFirstChange} />
+            <div className="field">
+              <Form.Dropdown placeholder='Select from an option below' fluid search selection 
+                        options={ initialStreets } 
+                        label={ window.__('Name of your street') }
+                        onChange={onFirstChange} />
+            </div>
           </div>
           <div className="column">
-            <Dropdown placeholder='Search for Intersecting Street' fluid search 
-                      value={selectedIntersection['text'] } selection 
-                      options={ intersectingStreets } 
-                      onChange={onSecondChange} />
+            <div className="field">
+              <Form.Dropdown placeholder='Select from an option below' fluid search 
+                        value={selectedIntersection['text'] } selection 
+                        options={ intersectingStreets } 
+                        label={ window.__('Name of nearest cross-street') }
+                        onChange={onSecondChange} />
+            </div>
           </div>
           <input type="hidden" name="survey_response[geometry]" value={`POINT (${chosenLatLng['lng']} ${chosenLatLng['lat']})`} />
         </div>
