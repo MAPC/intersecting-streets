@@ -9,7 +9,7 @@ class PointsMap extends Component  {
   render() {
     return (
       <div className="map-container">
-        <div><label>{window.__('What is your approximate home location?')} <span class="required">({window.__('required') })</span></label></div>
+        <div><label>{window.__('What is your approximate home location?')} <span className="required">({window.__('required') })</span></label></div>
         <div>{window.__('Please click the map at an intersection on your street, near your home:')}</div>
         <Map center={this.props.center} zoom={this.props.zoom} onClick={this.props.addCustomPoint.bind(this)}>
           <TileLayer

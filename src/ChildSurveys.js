@@ -45,10 +45,12 @@ class ChildSurveys extends Component {
         </Button>
         <Form.Dropdown placeholder='Select from an option below' fluid selection
                   options={ counts }
+                  search
                   label={ window.__('How many vehicles do you have in your household?') }
                   name={ 'survey_response[nr_vehicles]' }/>
         <Form.Dropdown placeholder="Select from an option below" fluid selection 
                   options={ counts }
+                  search
                   label={ window.__('How many people in your household have a driver\'s license?') }
                   name={ 'survey_response[nr_licenses]' }/>
       </div>
