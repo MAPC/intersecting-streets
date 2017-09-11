@@ -5,7 +5,7 @@ import $ from 'jquery';
 import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
-const muni_id = window.muni_id || 1123;
+const muni_id = window.muni_id || 1;
 const school = window.school || { lat: 42, lng: -71 };
 
 class StreetDropdown extends Component {
@@ -49,7 +49,9 @@ class StreetDropdown extends Component {
     let encodedStreet = street;
     return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, st_name_2 AS value FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=${muni_id}`)
       .then((data) => {
-        this.setState({ intersectingStreets: data.rows });
+        const sortedRows = data.rows.sort((a,b) => (a.text > b.text) ? 1 : -1);
+
+        this.setState({ intersectingStreets: sortedRows });
         this.IntersectingPoints(street);
       });
   }
@@ -58,10 +60,11 @@ class StreetDropdown extends Component {
     let encodedStreet = street;
     return $.getJSON(`${endpoint}SELECT DISTINCT(st_name_2) AS text, lat, long AS lng FROM%20%22mapc-admin%22.survey_intersection%20WHERE st_name_1='${encodedStreet}' AND town_id=${muni_id}`)
       .then((data) => {
-        let latlngs = data.rows.map((row) => { return [row.lat,row.lng]; });
+        const sortedRows = data.rows.sort((a,b) => (a.text > b.text) ? 1 : -1);
+        let latlngs = sortedRows.map((row) => { return [row.lat,row.lng]; });
         let center = new L.LatLngBounds(latlngs).getCenter();
 
-        this.setState({ points: data.rows, 
+        this.setState({ points: sortedRows, 
                         lat: center.lat, 
                         lng: center.lng });
       });
@@ -74,10 +77,12 @@ class StreetDropdown extends Component {
 
   OnIntersectingPointsChange = (event, data) => {
     let chosenIndex = data.options.findIndex((el) => { return el.value === data.value });
-    this.setState({ selectedIntersectionIndex: chosenIndex, customPoint: null });
+    this.setState({ selectedIntersectionIndex: chosenIndex, customPoint: null }, done => {
+      this.forceUpdate();
+    });
   }
 
-  OnMarkerClick = (index, marker) => {
+  OnMarkerClick = (index) => {
     this.setState({ selectedIntersectionIndex: index, customPoint: null });
   }
 
@@ -124,7 +129,7 @@ class StreetDropdown extends Component {
           <div className="column">
             <div className="field">
               <Form.Dropdown placeholder='Select from an option below' fluid search 
-                        value={selectedIntersection['text'] } selection 
+                        value={selectedIntersection.text} selection 
                         options={ intersectingStreets } 
                         label={ window.__('Name of nearest cross-street') }
                         onChange={onSecondChange} />

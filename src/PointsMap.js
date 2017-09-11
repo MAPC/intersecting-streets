@@ -14,8 +14,9 @@ class PointsMap extends Component  {
           />
           <Marker position={this.props.school} />
           {
-            this.props.points.map((point, index) => 
-              <Marker onClick={this.props.onMarkerClick.bind(this, index)} position={[point.lat, point.lng]} key={index} />
+            this.props.points.map((point, index) => {
+              return <Marker onClick={this.props.onMarkerClick.bind(this, index)} position={[point.lat, point.lng]} key={index} />
+            }
             )
           }
 
