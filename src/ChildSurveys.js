@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ChildSurvey from './ChildSurvey';
-import { Form, Dropdown, Button } from 'semantic-ui-react';
+import { Form, Button } from 'semantic-ui-react';
 
 const counts = [  { value: '0', text: '0'  },
                   { value: '1', text: '1'  },

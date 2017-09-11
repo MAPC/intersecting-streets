@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PointsMap from './PointsMap';
-import { Form, Dropdown } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import $ from 'jquery'; 
-import { Map, Marker, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
-const muni_id = window.muni_id || 1;
+const muni_id = window.muni_id || 1123;
 const school = window.school || { lat: 42, lng: -71 };
 
 class StreetDropdown extends Component {

@@ -1,5 +1,5 @@
-import { Form, Dropdown } from 'semantic-ui-react';
 import React, { Component } from 'react';
+import { Form } from 'semantic-ui-react';
 
 // answers and values
 // we can internationalize these in rails

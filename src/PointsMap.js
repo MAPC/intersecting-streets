@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import { Map, Marker, TileLayer } from 'react-leaflet';
 
 class PointsMap extends Component  {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="map-container">
