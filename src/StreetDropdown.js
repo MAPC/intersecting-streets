@@ -112,7 +112,8 @@ class StreetDropdown extends Component {
                       center={[this.state.lat,this.state.lng]} 
                       onMarkerClick={onMarkerClick}
                       customPoint={this.state.customPoint}
-                      addCustomPoint={this.AddCustomPoint} />
+                      addCustomPoint={this.AddCustomPoint} 
+                      selectedIndex={this.state.selectedIntersectionIndex} />
         </div>
         <div className="row" onClick={this.ShowDropdowns} style={{display: this.state.showDropdowns ? 'none' : 'inherit'}}>
           <div className="ui button">{window.__('...or tell us the street intersection closest to your home.')}</div>

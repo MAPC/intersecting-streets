@@ -12,10 +12,11 @@ class PointsMap extends Component  {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
           />
-          <Marker position={this.props.school} />
+          <Marker position={this.props.school} className="active-marker" />
           {
             this.props.points.map((point, index) => {
-              return <Marker onClick={this.props.onMarkerClick.bind(this, index)} position={[point.lat, point.lng]} key={index} />
+              var _opacity = (!this.props.customPoint && index === this.props.selectedIndex) ? 1 : .4;
+              return <Marker opacity={_opacity} onClick={this.props.onMarkerClick.bind(this, index)} position={[point.lat, point.lng]} key={index} />
             }
             )
           }
