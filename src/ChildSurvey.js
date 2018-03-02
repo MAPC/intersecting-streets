@@ -41,6 +41,7 @@ const TripReasonQuestion = ({id, mode, question, name}) => {
     return (
       <div className="field">
         <Form.Dropdown placeholder={question} fluid selection 
+                  required
                   name={name}
                   label={ window.__(question) }
                   options={ yesNo } />
@@ -78,12 +79,14 @@ class ChildSurvey extends Component {
             Child { this.state.id }
           </div>
           <Form.Dropdown placeholder='Select from an option below' fluid selection 
+                    required
                     label={ window.__('What grade is your child in?') }
                     options={ grades }
                     labeled={ true } 
                     name={ `survey_response[grade_${this.state.id}]` } />
 
           <Form.Dropdown placeholder='Select from an option below' fluid selection 
+                    required
                     onChange={this.updateTo} 
                     options={ modes }
                     label={ window.__('How does your child get TO school on most days?') }
@@ -96,6 +99,7 @@ class ChildSurvey extends Component {
                             question='Do you usually drop off your child on your way to work or another destination?' />
 
           <Form.Dropdown placeholder='Select from an option below' fluid selection 
+                    required
                     onChange={this.updateFrom} 
                     options={ modes }
                     label={ window.__('How does your child get home FROM school on most days?') }

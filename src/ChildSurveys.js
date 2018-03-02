@@ -25,7 +25,7 @@ class ChildSurveys extends Component {
   AddChild = () => {
     this.setState({ count: this.state.count+1 })
   }
-
+ 
   render() {
     let childSurveys = [];
     for (var i = 0; i < this.state.count; i++) {

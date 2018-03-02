@@ -118,7 +118,7 @@ class StreetDropdown extends Component {
         <div className="row" onClick={this.ShowDropdowns} style={{display: this.state.showDropdowns ? 'none' : 'inherit'}}>
           <div className="ui button">{window.__('...or tell us the street intersection closest to your home.')}</div>
         </div>
-        <div className="row" style={{display: this.state.showDropdowns ? 'inherit' : 'none'}}>
+        <div className={this.state.showDropdowns ? 'row active' : 'row'} style={{display: this.state.showDropdowns ? 'flex' : 'none'}}>
           <div className="column">
             <div className="field">
               <Form.Dropdown placeholder='Select from an option below' fluid search selection 
