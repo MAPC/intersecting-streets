@@ -3,13 +3,13 @@ import { Form } from 'semantic-ui-react';
 
 // answers and values
 // we can internationalize these in rails
-const modes = [ {value: "w",    text: "Walk"},
-                {value: "fv",   text: "Family Vehicle (only children in your family)"},
-                {value: "sb",   text: "School Bus"},
-                {value: "b",    text: "Bicycle"},
-                {value: "o",    text: "Other (skateboard, scooter, inline skates, etc.)"},
-                {value: "t",    text: "Transit (city bus, subway, etc.)"},
-                {value: "cp",   text: "Carpool (with children from other families)"}
+const modes = [ {value: "w",    text: "Walk" },
+                {value: "fv",   text: "Family Vehicle (only children in your family)" },
+                {value: "sb",   text: "School Bus" },
+                {value: "b",    text: "Bicycle" },
+                {value: "o",    text: "Other (skateboard, scooter, inline skates, etc.)" },
+                {value: "t",    text: "Transit (city bus, subway, etc.)" },
+                {value: "cp",   text: "Carpool (with children from other families)" },
               ].map(option=> {
                 return { value: option.value, text: window.__(option.text) };
               });
@@ -83,18 +83,21 @@ class ChildSurvey extends Component {
                     label={ window.__('What grade is your child in?') }
                     options={ grades }
                     labeled={ true } 
+                    search
                     name={ `survey_response[grade_${this.state.id}]` } />
 
           <Form.Dropdown placeholder='Select from an option below' fluid selection 
                     required
                     onChange={this.updateTo} 
                     options={ modes }
+                    search
                     label={ window.__('How does your child get TO school on most days?') }
                     name={ `survey_response[to_school_${this.state.id}]` } />
 
 
           <TripReasonQuestion id={this.state.id} 
                             mode={this.state.to} 
+                            search
                             name={ `survey_response[dropoff_${this.state.id}]` }
                             question='Do you usually drop off your child on your way to work or another destination?' />
 
@@ -102,12 +105,14 @@ class ChildSurvey extends Component {
                     required
                     onChange={this.updateFrom} 
                     options={ modes }
+                    search
                     label={ window.__('How does your child get home FROM school on most days?') }
                     name={ `survey_response[from_school_${this.state.id}]` } />
 
 
           <TripReasonQuestion id={this.state.id} 
                             mode={this.state.from} 
+                            search
                             name={ `survey_response[pickup_${this.state.id}]` }
                             question='Do you usually pick up your child on your way from work or another origin?' />
         </div>
