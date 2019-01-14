@@ -114,23 +114,21 @@ class StreetDropdown extends Component {
 
           <input type="checkbox" name="survey_response[in_district]" onClick={(e) => this.SelectDistrictStatus(e)} />
         </div>
-        {this.state.withinDistrict ? (
-          <div className="row ui equal padded grid">
-            <div className="row">
-              <PointsMap  zoom={this.state.zoom}
-                        points={this.state.points}
-                          school={this.state.school}
-                          center={[this.state.lat,this.state.lng]}
-                          onMarkerClick={onMarkerClick}
-                          customPoint={this.state.customPoint}
-                          addCustomPoint={this.AddCustomPoint}
-                          selectedIndex={this.state.selectedIntersectionIndex} />
-            </div>
-            <div className="row" onClick={this.ShowDropdowns} style={{display: this.state.showDropdowns ? 'none' : 'inherit'}}>
-              <div className="ui button">{window.__('...or tell us the street intersection closest to your home.')}</div>
-            </div>
+        <div className="row ui equal padded grid" style={{ display: this.state.withinDistrict ? 'block' : 'none' }}>
+          <div className="row">
+            <PointsMap  zoom={this.state.zoom}
+                      points={this.state.points}
+                        school={this.state.school}
+                        center={[this.state.lat,this.state.lng]}
+                        onMarkerClick={onMarkerClick}
+                        customPoint={this.state.customPoint}
+                        addCustomPoint={this.AddCustomPoint}
+                        selectedIndex={this.state.selectedIntersectionIndex} />
           </div>
-        ) : null }
+          <div className="row" onClick={this.ShowDropdowns} style={{display: this.state.showDropdowns ? 'none' : 'inherit'}}>
+            <div className="ui button">{window.__('...or tell us the street intersection closest to your home.')}</div>
+          </div>
+        </div>
         <div className={this.state.showDropdowns ? 'row active' : 'row'} style={{display: this.state.showDropdowns ? 'flex' : 'none'}}>
           <div className="column">
             <div className="field">
