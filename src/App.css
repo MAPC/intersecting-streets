@@ -30,3 +30,8 @@
 .map-container {
   width: 100%;
 }
+
+.district-question label {
+  display: inline-block; 
+  margin-right: 10px; 
+}

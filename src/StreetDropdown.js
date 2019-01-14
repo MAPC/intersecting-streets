@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PointsMap from './PointsMap';
 import { Form } from 'semantic-ui-react';
-import $ from 'jquery'; 
+import $ from 'jquery';
 import L from 'leaflet';
 
 const endpoint = "//mapc-admin.carto.com/api/v2/sql?q=";
@@ -12,7 +12,7 @@ class StreetDropdown extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
+    this.state = {
       initialStreets: [{
         name: '',
         value: 1
@@ -64,8 +64,8 @@ class StreetDropdown extends Component {
         let latlngs = sortedRows.map((row) => { return [row.lat,row.lng]; });
         let center = new L.LatLngBounds(latlngs).getCenter();
 
-        this.setState({ points: sortedRows, 
-                        lat: center.lat, 
+        this.setState({ points: sortedRows,
+                        lat: center.lat,
                         lng: center.lng });
       });
   }
@@ -90,8 +90,12 @@ class StreetDropdown extends Component {
     this.setState({ customPoint: { lat: loc.latlng.lat, lng: loc.latlng.lng } });
   }
 
-  ShowDropdowns = (event) => {
+  ShowDropdowns = () => {
     this.setState({ showDropdowns: true });
+  }
+
+  SelectDistrictStatus = () => {
+    this.setState(prevState => ({ withinDistrict: !prevState.withinDistrict }));
   }
 
   render() {
@@ -105,33 +109,42 @@ class StreetDropdown extends Component {
 
     return (
       <div className="ui equal width padded grid">
-        <div className="row">
-          <PointsMap  zoom={this.state.zoom} 
-                      points={this.state.points} 
-                      school={this.state.school}
-                      center={[this.state.lat,this.state.lng]} 
-                      onMarkerClick={onMarkerClick}
-                      customPoint={this.state.customPoint}
-                      addCustomPoint={this.AddCustomPoint} 
-                      selectedIndex={this.state.selectedIntersectionIndex} />
+        <div className="row district-question">
+          <label htmlFor="survey_response[in_district]">Do you live within the district boundaries?</label>
+
+          <input type="checkbox" name="survey_response[in_district]" onClick={(e) => this.SelectDistrictStatus(e)} />
         </div>
-        <div className="row" onClick={this.ShowDropdowns} style={{display: this.state.showDropdowns ? 'none' : 'inherit'}}>
-          <div className="ui button">{window.__('...or tell us the street intersection closest to your home.')}</div>
-        </div>
+        {this.state.withinDistrict ? (
+          <div className="row ui equal padded grid">
+            <div className="row">
+              <PointsMap  zoom={this.state.zoom}
+                        points={this.state.points}
+                          school={this.state.school}
+                          center={[this.state.lat,this.state.lng]}
+                          onMarkerClick={onMarkerClick}
+                          customPoint={this.state.customPoint}
+                          addCustomPoint={this.AddCustomPoint}
+                          selectedIndex={this.state.selectedIntersectionIndex} />
+            </div>
+            <div className="row" onClick={this.ShowDropdowns} style={{display: this.state.showDropdowns ? 'none' : 'inherit'}}>
+              <div className="ui button">{window.__('...or tell us the street intersection closest to your home.')}</div>
+            </div>
+          </div>
+        ) : null }
         <div className={this.state.showDropdowns ? 'row active' : 'row'} style={{display: this.state.showDropdowns ? 'flex' : 'none'}}>
           <div className="column">
             <div className="field">
-              <Form.Dropdown placeholder='Select from an option below' fluid search selection 
-                        options={ initialStreets } 
+              <Form.Dropdown placeholder='Select from an option below' fluid search selection
+                        options={ initialStreets }
                         label={ window.__('Name of your street') }
                         onChange={onFirstChange} />
             </div>
           </div>
           <div className="column">
             <div className="field">
-              <Form.Dropdown placeholder='Select from an option below' fluid search 
-                        value={selectedIntersection.text} selection 
-                        options={ intersectingStreets } 
+              <Form.Dropdown placeholder='Select from an option below' fluid search
+                        value={selectedIntersection.text} selection
+                        options={ intersectingStreets }
                         label={ window.__('Name of nearest cross-street') }
                         onChange={onSecondChange} />
             </div>
